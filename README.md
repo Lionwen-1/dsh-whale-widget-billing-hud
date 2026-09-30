@@ -1,6 +1,21 @@
 # DSH 黑鲸女仆挂件增强包
 
-把 DSH 桌面端的「小鲸鱼娘挂件」改造成**实时计费仪表**：脚下常驻余额条 + 每次模型调用飘红字 + 整套可拖动/可缩放/可隐藏的调节项。
+## 项目简介 / Overview
+
+**中文：** 这是给 DSH 桌面端小鲸鱼娘挂件使用的本地补丁包，将挂件变成模型调用费用与余额的可视化仪表。它依赖现有社区插件，仓库只保存补丁脚本和注入代码。
+
+**English:** This local patch package turns the DSH desktop whale widget into a visual dashboard for model charges and account balance. It works with existing community plugins; this repository contains only the patch scripts and injected code.
+
+## 主要功能与用途 / Features and use cases
+
+| 功能 / Feature | 用途 / Use case |
+| --- | --- |
+| 常驻余额框 / Persistent balance panel | 在挂件脚下显示余额与今日用量，并可拖动、调整尺寸或隐藏。Show balance and today's usage beneath the widget, with controls to move, resize, or hide the panel. |
+| 单次费用提示 / Per-call charge indicators | 从计费插件读取扣费事件，在角色旁显示每次调用的费用明细。Read charge events from the billing plugin and display per-call cost details beside the character. |
+| 气泡设置 / Bubble controls | 调整气泡字号、整体大小与位置，并保存设置。Adjust bubble text size, overall scale, and position with persistent settings. |
+| 安装保护 / Installation checks | 打补丁前检查指定插件版本和源码锚点，保留原文件备份以便回滚。Check supported plugin versions and source anchors before patching, and keep original-file backups for rollback. |
+
+**适合 / For:** 使用指定版本 DSH 插件、希望在桌面上随时查看模型用量与余额的人。Users of the supported DSH plugin versions who want at-a-glance usage and balance information on the desktop.
 
 > 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。
 > 效果全部来自**本地补丁**，不改 DSH 本体；每个补丁脚本都**幂等**，重复运行安全。
