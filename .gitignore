@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+payload/whale-widget-backup-*/
+payload/damage-pulse-backup-*/
+_packtest/
+*.log
