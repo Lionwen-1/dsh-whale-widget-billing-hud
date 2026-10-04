@@ -1,6 +1,18 @@
 # DSH 黑鲸女仆挂件增强包
 
-[English](README.en.md) · [机制与排错](NOTES.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
+[English](README.en.md) · [验证记录](docs/VALIDATION.md) · [机制与排错](NOTES.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
+
+## 演示 / Demo
+
+以下是使用**虚构金额、原创几何小鲸鱼**制作的功能示意图，**不是 DSH 实际录屏或界面截图**；其中的扣费动画也不代表当前版本已经通过端到端验证。实际插件界面以 DSH 中显示的为准。
+
+![余额与用量示意图](docs/media/overview.png)
+
+| 余额更新示意 / Balance update | 单次费用示意 / Charge breakdown |
+| --- | --- |
+| ![虚构余额更新动画](docs/media/balance-update.gif) | ![虚构单次费用动画](docs/media/charge-breakdown.gif) |
+
+[查看设置示意图](docs/media/settings.png) · [素材说明与再生成方法](docs/media/README.md)
 
 ## 项目简介 / Overview
 
@@ -21,7 +33,7 @@
 
 **适合 / For:** 使用指定版本 DSH 插件、希望在桌面上随时查看模型用量与余额的人。Users of the supported DSH plugin versions who want at-a-glance usage and balance information on the desktop.
 
-> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。DSH `0.2.0-rc.2` 与这套补丁尚未完成端到端验证；`--check` 只检查插件版本与源码锚点，不代表运行时兼容。
+> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。在 DSH `0.2.0-rc.2` 中，挂件与余额框已显示，但计费插件因兼容性检查被阻止运行，单次扣费链路尚未通过端到端验证。`--check` 只检查插件版本与源码锚点，不代表运行时兼容。详见[验证记录](docs/VALIDATION.md)。
 > 效果全部来自**本地补丁**，不改 DSH 本体；每个补丁脚本都**幂等**，重复运行安全。
 
 ---
@@ -74,8 +86,8 @@ python install.py --check --plugin-root "/path/to/profile/node_modules"
 
 ```
         ┌───────────────────────┐
-        │      余额 ¥46.5219     │   ← 4 位小数，实时逐笔往下扣
-        │   今日 ¥6.01 · 谷      │
+        │      余额 ¥88.4200     │   ← 虚构示例；4 位小数，逐笔更新
+        │   今日 ¥1.58 · 谷      │
         └───────────────────────┘
                  （她站在上面）
 ```

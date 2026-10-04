@@ -1,6 +1,18 @@
 # DSH Whale Widget Billing HUD
 
-[中文说明](README.md) · [Implementation notes (Chinese)](NOTES.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
+[中文说明](README.md) · [Validation record](docs/VALIDATION.md) · [Implementation notes (Chinese)](NOTES.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
+
+## Demo
+
+These illustrations use **fictional amounts and original geometric whale artwork**. They are **not screenshots or recordings of DSH**. In particular, the charge animation does not claim that the current DSH runtime has passed an end-to-end billing test.
+
+![Illustrative balance and usage overview](docs/media/overview.png)
+
+| Balance update illustration | Charge breakdown illustration |
+| --- | --- |
+| ![Fictional balance update animation](docs/media/balance-update.gif) | ![Fictional per-call charge animation](docs/media/charge-breakdown.gif) |
+
+[Settings illustration](docs/media/settings.png) · [Media notes and regeneration](docs/media/README.md)
 
 This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches two separately installed community plugins. The repository contains only our patch scripts and injected code; it does not redistribute the plugins or artwork.
 
@@ -20,7 +32,7 @@ This is an independent community patch and is not affiliated with DSH or the mai
 - DSH desktop must have run at least once, creating a profile under `~/.dsh/profiles/`.
 - Install `dsh-whale-widget` **0.3.12** and `dsh-damage-pulse` **4.0.11** in the same DSH profile.
 - Python 3.8 or newer. Node.js is optional but enables JavaScript syntax checks during installation.
-- The complete workflow was tested on Windows with DSH **0.1.7-rc.2**. A newer DSH runtime, including **0.2.0-rc.2**, has not been verified end to end. A passing `--check` confirms plugin versions and source anchors only; it does not prove runtime compatibility.
+- The complete workflow was tested on Windows with DSH **0.1.7-rc.2**. On **0.2.0-rc.2**, the widget and balance panel render, but DSH blocks the billing plugin at its compatibility gate. Per-call charging has therefore not been verified end to end on that version. A passing `--check` confirms plugin versions and source anchors only; it does not prove runtime compatibility. See the [validation record](docs/VALIDATION.md).
 
 ## Install
 
@@ -72,6 +84,9 @@ payload/patch_whale_widget.py Widget host and front-end patch
 payload/patch_damage_pulse.py Billing host and client patch
 payload/balbox_patch.js       Injected balance panel and menu code
 tests/test_install.py         Installer behavior tests
+tools/render_demo.py          Original demo media renderer
+docs/media/                   Fictional PNG and GIF illustrations
+docs/VALIDATION.md            Current runtime validation record
 README.md                     Chinese guide
 NOTES.md                      Chinese implementation notes
 LICENSE                       MIT license for this project's original code
