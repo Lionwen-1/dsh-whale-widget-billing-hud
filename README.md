@@ -21,7 +21,7 @@
 
 **适合 / For:** 使用指定版本 DSH 插件、希望在桌面上随时查看模型用量与余额的人。Users of the supported DSH plugin versions who want at-a-glance usage and balance information on the desktop.
 
-> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。本机现已升级到 DSH `0.2.0-rc.2`，该运行时组合尚未完成端到端验证；`--check` 只检查插件版本与源码锚点，不代表运行时兼容。
+> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。DSH `0.2.0-rc.2` 与这套补丁尚未完成端到端验证；`--check` 只检查插件版本与源码锚点，不代表运行时兼容。
 > 效果全部来自**本地补丁**，不改 DSH 本体；每个补丁脚本都**幂等**，重复运行安全。
 
 ---
