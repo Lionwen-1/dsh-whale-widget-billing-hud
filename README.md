@@ -1,5 +1,7 @@
 # DSH 黑鲸女仆挂件增强包
 
+[English](README.en.md) · [机制与排错](NOTES.md)
+
 ## 项目简介 / Overview
 
 **中文：** 这是给 DSH 桌面端小鲸鱼娘挂件使用的本地补丁包，将挂件变成模型调用费用与余额的可视化仪表。它依赖现有社区插件，仓库只保存补丁脚本和注入代码。
@@ -17,7 +19,7 @@
 
 **适合 / For:** 使用指定版本 DSH 插件、希望在桌面上随时查看模型用量与余额的人。Users of the supported DSH plugin versions who want at-a-glance usage and balance information on the desktop.
 
-> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。
+> 前置：DSH 桌面版（已在 `0.1.7-rc.2` 验证）+ 社区插件 `dsh-whale-widget` **0.3.12**、`dsh-damage-pulse` **4.0.11**。本机现已升级到 DSH `0.2.0-rc.2`，该运行时组合尚未完成端到端验证；`--check` 只检查插件版本与源码锚点，不代表运行时兼容。
 > 效果全部来自**本地补丁**，不改 DSH 本体；每个补丁脚本都**幂等**，重复运行安全。
 
 ---
@@ -43,6 +45,9 @@ python install.py --check
 
 # 2) 正式打补丁（幂等，可反复运行）
 python install.py
+
+# 如果多个 profile 同时安装了两款插件，明确指定目标 profile
+python install.py --check --plugin-root "/path/to/profile/node_modules"
 ```
 
 脚本会做这些事：
@@ -158,10 +163,13 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 ## 八、目录结构
 
 ```
-dsh-maid-pack/
+dsh-whale-widget-billing-hud/
 ├─ install.py                     一键安装器（--check 可空跑）
 ├─ README.md                      本文件
+├─ README.en.md                   English guide
 ├─ NOTES.md                       机制说明与踩坑记录（想改代码时看）
+├─ LICENSE.md                     本仓库源码许可说明
+├─ tests/                        安装器行为测试
 └─ payload/
    ├─ patch_whale_widget.py       挂件补丁（含注入代码）
    ├─ patch_damage_pulse.py       计费插件补丁
