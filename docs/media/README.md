@@ -17,7 +17,7 @@ The main image, GIFs, and `tools/assets/black-whale-closed-eyes.png` partial bli
 | `plugin-widget-demo.png` | 实际插件画面，经数值脱敏 / Edited plugin screenshot with fictional values |
 | `overview.png` | 功能总览 / Feature overview |
 | `settings.png` | 设置项 / Settings |
-| `balance-update.gif` | 黑鲸挂件的余额更新与眨眼合成动画 / Composed balance update and blink |
+| `balance-update.gif` | 黑鲸挂件的余额更新、头顶扣费和眨眼合成动画 / Composed balance update, overhead charge, and blink |
 | `charge-breakdown.gif` | 黑鲸挂件头顶逐项扣费飘字与眨眼合成动画 / Composed overhead charges and blink |
 | `tools/assets/black-whale-closed-eyes.png` | 仅含闭眼局部的叠加素材 / Partial closed-eye overlay only |
 

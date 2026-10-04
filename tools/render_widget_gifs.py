@@ -126,10 +126,10 @@ def make_frame(role, closed_role, index, *, charge=False):
         text(draw, 44, 485, "受击动作已开启（可在设置中关闭）", 13, "#9daec0")
     else:
         if index < 12:
-            text(draw, 52, 343, "等待一次模型调用…", 19, "#c2ccdc", True)
+            text(draw, 678, 82, "等待一次模型调用…", 19, "#c2ccdc", True, anchor="ra")
         else:
-            text(draw, 52, 343, "调用完成，余额已更新", 19, "#dce8f3", True)
-            text(draw, 52, 386, "− ¥0.0100", 29, "#ff726e", True)
+            text(draw, 678, 82, "调用完成，余额已更新", 19, "#dce8f3", True, anchor="ra")
+            floating_charge(image, "扣费", 0.0100, index - 12, 153)
         text(draw, 44, 485, "演示数值 · 非真实录屏", 13, "#9daec0")
     return image.convert("RGB").resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
 
@@ -161,7 +161,7 @@ def main():
     closed_role = role.copy()
     closed_role.alpha_composite(overlay)
     OUT.mkdir(parents=True, exist_ok=True)
-    balance_frames = [make_frame(role, closed_role, i) for i in range(28)]
+    balance_frames = [make_frame(role, closed_role, i) for i in range(34)]
     charge_frames = [make_frame(role, closed_role, i, charge=True) for i in range(44)]
     save_gif(OUT / "balance-update.gif", balance_frames, 120)
     save_gif(OUT / "charge-breakdown.gif", charge_frames, 110)
