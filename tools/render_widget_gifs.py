@@ -1,6 +1,7 @@
 """Render fictional widget GIFs from a locally supplied, licensed custom role.
 
 The role image is read at render time and is never copied into this repository.
+The bundled eye-state overlay is a CC BY-NC-SA 4.0 derivative of that role.
 The generated GIFs are illustrations, not recordings or billing-test evidence.
 Artwork in the GIFs follows the role image's CC BY-NC-SA 4.0 terms; see
 THIRD_PARTY_NOTICES.md for attribution and modifications.
@@ -56,16 +57,19 @@ def background():
     return image
 
 
-def draw_character(image, role, frame, hit_at=None):
+def draw_character(image, role, closed_role, frame, *, charge=False, hit_at=None):
     bob = round(2 * math.sin(frame * 0.36))
     dx = 0
     brightness = 1.0
+    blink_frames = (10, 11, 31, 32) if charge else (7, 8, 23, 24)
+    character = closed_role if frame in blink_frames else role
     if hit_at is not None:
         age = frame - hit_at
         if 0 <= age < 6:
             dx = (-4, 4, -3, 2, -1, 0)[age]
             brightness = (1.12, 1.28, 1.17, 1.09, 1.04, 1.0)[age]
-    character = role if brightness == 1.0 else ImageEnhance.Brightness(role).enhance(brightness)
+    if brightness != 1.0:
+        character = ImageEnhance.Brightness(character).enhance(brightness)
     image.alpha_composite(character, (px(296 + dx), px(119 + bob)))
 
 
@@ -92,33 +96,33 @@ def draw_balance_box(image, balance, today, pulse=False):
     text(draw, 506, 499, f"今日 ¥{today:.2f} · 谷", 17, "#6678ad", False, anchor="mm")
 
 
-def floating_charge(image, label, cost, age, x, y):
-    if age < 0 or age > 19:
+def floating_charge(image, label, cost, age, y):
+    if age < 0 or age > 20:
         return
-    alpha = min(255, age * 64 + 85, (20 - age) * 35)
-    rise = age * 2.5
+    alpha = round(255 * min(age / 3, 1, (20 - age) / 5))
+    rise = age
     value = f"{label} -{cost:.4f}¥"
     glow = Image.new("RGBA", image.size, (0, 0, 0, 0))
     gdraw = ImageDraw.Draw(glow)
-    text(gdraw, x, y - rise, value, 23, (255, 76, 72, alpha), True)
+    text(gdraw, 678, y - rise, value, 21, (255, 59, 48, alpha), True, anchor="ra")
     image.alpha_composite(glow.filter(ImageFilter.GaussianBlur(px(4))))
     image.alpha_composite(glow)
 
 
-def make_frame(role, index, *, charge=False):
+def make_frame(role, closed_role, index, *, charge=False):
     image = background()
     hit_at = 4 if charge else None
-    draw_character(image, role, index, hit_at=hit_at)
+    draw_character(image, role, closed_role, index, charge=charge, hit_at=hit_at)
     updated = index >= (4 if charge else 12)
     pulse = (4 <= index <= 10) if charge else (12 <= index <= 18)
     draw_bubble(image, 88.41 if updated else 88.42, 1.59 if updated else 1.58, pulse)
     draw_balance_box(image, 88.4100 if updated else 88.4200, 1.59 if updated else 1.58, pulse)
     draw = ImageDraw.Draw(image)
     if charge:
-        text(draw, 46, 298, "本次调用 · 逐项扣费", 18, "#d8e1ee", True)
-        floating_charge(image, "命中", 0.0026, index - 4, 74, 367)
-        floating_charge(image, "未命中", 0.0004, index - 13, 54, 384)
-        floating_charge(image, "输出", 0.0070, index - 22, 83, 401)
+        text(draw, 46, 326, "扣费从角色头顶逐项跳出", 18, "#d8e1ee", True)
+        floating_charge(image, "命中", 0.0026, index - 4, 187)
+        floating_charge(image, "未命中", 0.0004, index - 13, 151)
+        floating_charge(image, "输出", 0.0070, index - 22, 115)
         text(draw, 44, 485, "受击动作已开启（可在设置中关闭）", 13, "#9daec0")
     else:
         if index < 12:
@@ -142,14 +146,23 @@ def main():
     parser.add_argument("--role-image", type=Path,
                         default=Path.home() / ".dsh" / "whale-roles" / "maid-ink.png",
                         help="local licensed role PNG; never added to the repository")
+    parser.add_argument("--blink-overlay", type=Path,
+                        default=ROOT / "tools" / "assets" / "black-whale-closed-eyes.png",
+                        help="CC BY-NC-SA 4.0 eye-state overlay matching the selected role")
     args = parser.parse_args()
     source = args.role_image.expanduser()
     if not source.is_file():
         raise SystemExit(f"找不到角色图：{source}；用 --role-image 指定本机有权使用的 PNG。")
+    overlay_path = args.blink_overlay.expanduser()
+    if not overlay_path.is_file():
+        raise SystemExit(f"找不到眨眼叠加素材：{overlay_path}。")
     role = Image.open(source).convert("RGBA").resize((px(399), px(399)), Image.Resampling.LANCZOS)
+    overlay = Image.open(overlay_path).convert("RGBA").resize(role.size, Image.Resampling.LANCZOS)
+    closed_role = role.copy()
+    closed_role.alpha_composite(overlay)
     OUT.mkdir(parents=True, exist_ok=True)
-    balance_frames = [make_frame(role, i) for i in range(28)]
-    charge_frames = [make_frame(role, i, charge=True) for i in range(38)]
+    balance_frames = [make_frame(role, closed_role, i) for i in range(28)]
+    charge_frames = [make_frame(role, closed_role, i, charge=True) for i in range(44)]
     save_gif(OUT / "balance-update.gif", balance_frames, 120)
     save_gif(OUT / "charge-breakdown.gif", charge_frames, 110)
     for name in ("balance-update.gif", "charge-breakdown.gif"):

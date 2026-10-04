@@ -4,7 +4,7 @@
 
 ## Demo
 
-The main image is an edited **screenshot of the actual widget**, supplied by the user, with fictional amounts. The two GIFs use the same locally customized black whale character to illustrate balance updates and sequential charge text beside the character. They are programmatically composed demonstrations, **not runtime recordings or proof of an end-to-end charge test**. The black-haired character is a locally recolored and cropped adaptation of `maid-atelier` art. The main image and GIFs follow **CC BY-NC-SA 4.0**, outside this repository's MIT code license. Attribution: 上善 → ZipZipPipe → Small-tailqwq; see the [modification notice](THIRD_PARTY_NOTICES.md).
+The main image is an edited **screenshot of the actual widget**, supplied by the user, with fictional amounts. The two GIFs use the same locally customized black whale character to illustrate balance updates, blinking, and sequential charge text floating above the character's head. They are programmatically composed demonstrations, **not runtime recordings or proof of an end-to-end charge test**. The black-haired character is a locally recolored and cropped adaptation of `maid-atelier` art. The main image, GIFs, and partial blink overlay follow **CC BY-NC-SA 4.0**, outside this repository's MIT code license. Attribution: 上善 → ZipZipPipe → Small-tailqwq; see the [modification notice](THIRD_PARTY_NOTICES.md).
 
 ![Locally customized whale character with fictional balance values](docs/media/plugin-widget-demo.png)
 
@@ -23,7 +23,7 @@ This is an independent community patch and is not affiliated with DSH or the mai
 | Feature | Use |
 | --- | --- |
 | Persistent balance panel | Keep the account balance and today's usage visible below the character. Move, resize, or hide the panel. |
-| Per-call charge indicators | Show each model call's charge near the character, including cache hit, cache miss, and output costs when the event provides a breakdown. |
+| Per-call charge indicators | Show each model call's charge above the character's head, including cache hit, cache miss, and output costs when the event provides a breakdown. |
 | Optional hit reaction | Lightly animate the currently selected widget character on each charge. Toggle it in the ☰ settings menu; off by default. |
 | Bubble controls | Adjust the bubble's text size, overall scale, and position. Save settings in browser storage and a local DSH configuration file. |
 | Installer checks | Verify plugin versions and source anchors before modifying either plugin. Keep original-file backups for rollback. |
@@ -87,6 +87,7 @@ payload/balbox_patch.js       Injected balance panel and menu code
 tests/test_install.py         Installer behavior tests
 tools/render_demo.py          Original geometric PNG renderer
 tools/render_widget_gifs.py   Widget GIF renderer (needs a local licensed role PNG)
+tools/assets/                 CC BY-NC-SA 4.0 partial blink overlay
 docs/media/                   Edited widget screenshot and illustrative media
 docs/VALIDATION.md            Current runtime validation record
 README.md                     Chinese guide

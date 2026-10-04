@@ -4,7 +4,7 @@
 
 ## 演示 / Demo
 
-主图由用户提供的**实际插件画面**编辑而成，余额已替换为虚构演示数值。下方两张 GIF 沿用本机黑鲸角色，分别模拟余额更新和角色旁逐项扣费飘字；它们是程序合成的功能演示，**并非真实录屏或端到端扣费验证**。黑发角色是本机对 `maid-atelier` 美术的改色与裁切；包含该角色的主图和 GIF 均按 **CC BY-NC-SA 4.0** 使用，**不属于本仓库代码的 MIT 许可范围**。署名：上善 → ZipZipPipe → Small-tailqwq；修改说明见[第三方声明](THIRD_PARTY_NOTICES.md)。
+主图由用户提供的**实际插件画面**编辑而成，余额已替换为虚构演示数值。下方两张 GIF 沿用本机黑鲸角色，模拟余额更新、自然眨眼，以及在角色头顶逐项跳出的扣费红字；它们是程序合成的功能演示，**并非真实录屏或端到端扣费验证**。黑发角色是本机对 `maid-atelier` 美术的改色与裁切；包含该角色的主图、GIF 和眨眼局部素材均按 **CC BY-NC-SA 4.0** 使用，**不属于本仓库代码的 MIT 许可范围**。署名：上善 → ZipZipPipe → Small-tailqwq；修改说明见[第三方声明](THIRD_PARTY_NOTICES.md)。
 
 ![本机黑鲸自定义角色与虚构余额的演示图](docs/media/plugin-widget-demo.png)
 
@@ -27,7 +27,7 @@
 | 功能 / Feature | 用途 / Use case |
 | --- | --- |
 | 常驻余额框 / Persistent balance panel | 在挂件脚下显示余额与今日用量，并可拖动、调整尺寸或隐藏。Show balance and today's usage beneath the widget, with controls to move, resize, or hide the panel. |
-| 单次费用提示 / Per-call charge indicators | 从计费插件读取扣费事件，在角色旁显示每次调用的费用明细。Read charge events from the billing plugin and display per-call cost details beside the character. |
+| 单次费用提示 / Per-call charge indicators | 从计费插件读取扣费事件，在角色头顶显示每次调用的费用明细。Read charge events from the billing plugin and display per-call cost details above the character's head. |
 | 可选受击动作 / Optional hit reaction | 每次扣费时让当前挂件角色轻微晃动；在 ☰ 设置里开关，默认关闭。Lightly animate the currently selected widget character on each charge; toggle it in the ☰ menu. Off by default. |
 | 气泡设置 / Bubble controls | 调整气泡字号、整体大小与位置，并保存设置。Adjust bubble text size, overall scale, and position with persistent settings. |
 | 安装保护 / Installation checks | 打补丁前检查指定插件版本和源码锚点，保留原文件备份以便回滚。Check supported plugin versions and source anchors before patching, and keep original-file backups for rollback. |
@@ -162,8 +162,8 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 
 - 挂件本体：**dsh-whale-widget**（社区插件）
 - 扣费数据：**dsh-damage-pulse / dsh-token-monitor**（社区插件）
-- 本仓库包含本地补丁脚本、注入代码，以及一张用于说明效果的**经编辑截图**；不打包原插件源码或独立角色素材。首次安装产生的原版备份只留在本机，不纳入 Git
-- 本仓库自有代码以 **MIT** 许可证开源，详见 [LICENSE](LICENSE)；演示截图中的自定义角色美术按 **CC BY-NC-SA 4.0**，来源、修改与署名见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- 本仓库包含本地补丁脚本、注入代码、一张经编辑截图、两张演示 GIF 和一份眨眼眼部局部素材；不打包原插件源码或完整角色原图。首次安装产生的原版备份只留在本机，不纳入 Git
+- 本仓库自有代码以 **MIT** 许可证开源，详见 [LICENSE](LICENSE)；演示素材中的自定义角色美术按 **CC BY-NC-SA 4.0**，来源、修改与署名见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
 - 受击反馈的交互思路参考 `dsh-damage-pulse`；动画、开关和持久化由本项目独立实现，未复制其角色素材或实现代码。额外的蓝发角色不在本仓库中
 - 若你另外用了黑鲸女仆皮肤（`maid-atelier`）：其插画为 **CC BY-NC-SA 4.0**（署名 上善 → ZipZipPipe → Small-tailqwq，**禁止商用**），代码为 MIT
 
