@@ -1,11 +1,10 @@
-"""Render original, fictional previews for the README (requires Pillow).
+"""Render original geometric PNG previews for the README (requires Pillow).
 
 These are illustrations, not screenshots. Values and UI labels are examples.
 No account details, DSH character art, or third-party plugin assets are used.
 """
 
 from pathlib import Path
-import math
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -123,53 +122,10 @@ def settings():
     im.save(OUT / "settings.png", optimize=True)
 
 
-def balance_animation():
-    frames = []
-    values = ["88.4200"]*5 + ["88.4174"]*7 + ["88.4100"]*8
-    for i, value in enumerate(values):
-        im, d = base("余额随调用更新", "Balance updates after each model call")
-        whale(d, bob=round(math.sin(i*0.45)*3))
-        balance_box(d, value, "1.58" if i < 5 else "1.59", glow=5 <= i <= 12)
-        info_card(d, 266, "当前余额 / Balance", f"¥{value}")
-        info_card(d, 365, "今日用量 / Today", "¥1.58" if i < 5 else "¥1.59", AMBER)
-        info_card(d, 464, "状态 / Status", "等待调用" if i < 5 else "已记录一笔费用", "#9ba8ff")
-        frames.append(im.resize((960, 540), Image.Resampling.LANCZOS))
-    frames[0].save(OUT / "balance-update.gif", save_all=True, append_images=frames[1:], duration=120,
-                   loop=0, optimize=True, disposal=2)
-
-
-def charge_animation():
-    entries = [("缓存命中 / Cache hit", "-¥0.0026", TEAL),
-               ("未命中 / Cache miss", "-¥0.0004", AMBER),
-               ("输出 / Output", "-¥0.0070", CORAL)]
-    frames = []
-    for i in range(24):
-        im, d = base("看清每次模型调用", "Illustrated charge-event sequence")
-        whale(d, x=323, y=339, bob=round(math.sin(i*0.4)*3))
-        balance_box(d, "88.4100")
-        rr(d, (648, 257, 1077, 532), 18, PANEL_LIGHT, "#315164", 2)
-        label(d, (672, 277), "单次费用 / Charge breakdown", 20, INK, True)
-        visible = min(3, max(0, (i-2)//6+1))
-        for j in range(visible):
-            name, amount, color = entries[j]
-            yy = 336+j*60
-            rr(d, (672, yy, 1050, yy+47), 12, "#20394a")
-            label(d, (686, yy+8), name, 16, INK)
-            label(d, (937, yy+8), amount, 17, color, True)
-            if i >= 7+j*5:
-                fade_y = max(0, i-(7+j*5))*3
-                label(d, (380+j*15, 280-j*33-fade_y), amount, 18, color, True)
-        frames.append(im.resize((960, 540), Image.Resampling.LANCZOS))
-    frames[0].save(OUT / "charge-breakdown.gif", save_all=True, append_images=frames[1:],
-                   duration=125, loop=0, optimize=True, disposal=2)
-
-
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     overview()
     settings()
-    balance_animation()
-    charge_animation()
-    for item in sorted(OUT.glob("*")):
-        if item.suffix in {".png", ".gif"}:
-            print(f"{item.relative_to(ROOT)}: {item.stat().st_size:,} bytes")
+    for name in ("overview.png", "settings.png"):
+        item = OUT / name
+        print(f"{item.relative_to(ROOT)}: {item.stat().st_size:,} bytes")

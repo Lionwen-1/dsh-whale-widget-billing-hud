@@ -1,8 +1,8 @@
 # Third-party notices / 第三方声明
 
-This repository contains patch scripts, anchor strings, original widget additions, and one edited demo screenshot. It does not bundle either third-party plugin or a standalone character asset. Install the plugins separately under their own licenses.
+This repository contains patch scripts, anchor strings, original widget additions, one edited demo screenshot, and two composed GIFs. It does not bundle either third-party plugin or a standalone character asset. Install the plugins separately under their own licenses.
 
-本仓库包含补丁脚本、定位原插件代码所需的锚点字符串、自写挂件功能及一张经编辑的演示截图；不打包第三方插件或独立角色素材。请按各项目自身许可单独安装插件。
+本仓库包含补丁脚本、定位原插件代码所需的锚点字符串、自写挂件功能、一张经编辑的演示截图和两张合成 GIF；不打包第三方插件或独立角色素材。请按各项目自身许可单独安装插件。
 
 | Dependency / 依赖 | Version / 版本 | License / 许可 | Notice / 署名 |
 | --- | --- | --- | --- |
@@ -10,9 +10,9 @@ This repository contains patch scripts, anchor strings, original widget addition
 | [dsh-damage-pulse](https://github.com/wssfk12138/dsh-damage-pulse) | 4.0.11 / 4.2.3 | MIT | Copyright (c) 2026 dsh-damage-pulse contributors |
 | [maid-atelier](https://github.com/Small-tailqwq/dsh-deep-whale/tree/main/maid-atelier) artwork / 美术 | Locally recolored custom role / 本机改色角色 | CC BY-NC-SA 4.0 | 上善 → ZipZipPipe → Small-tailqwq; see [NOTICE](https://github.com/Small-tailqwq/dsh-deep-whale/blob/main/maid-atelier/NOTICE) |
 
-The MIT permission and warranty terms for this project's code appear in [LICENSE](LICENSE). The edited `docs/media/plugin-widget-demo.png` is a user-supplied widget screenshot using a black-haired local custom role adapted from `maid-atelier` artwork. Local modification: recoloring the hair and palette, cropping the character to an avatar, then replacing balance values and adding a demo mark in the screenshot. The image follows [CC BY-NC-SA 4.0 artwork terms](https://github.com/Small-tailqwq/dsh-deep-whale/blob/main/maid-atelier/LICENSE-ARTWORK): attribution, noncommercial use, and ShareAlike. It is **not covered by this repository's MIT code license**. No standalone role image is bundled.
+The MIT permission and warranty terms for this project's code appear in [LICENSE](LICENSE). The edited `docs/media/plugin-widget-demo.png` is a user-supplied widget screenshot using a black-haired local custom role adapted from `maid-atelier` artwork. The `docs/media/balance-update.gif` and `docs/media/charge-breakdown.gif` also show that role in a programmatically composed UI. Local modifications: recoloring the hair and palette, cropping the character to an avatar, replacing the screenshot's balance values and adding a demo mark, then composing fictional balance and charge animations for the GIFs. These three media files follow [CC BY-NC-SA 4.0 artwork terms](https://github.com/Small-tailqwq/dsh-deep-whale/blob/main/maid-atelier/LICENSE-ARTWORK): attribution, noncommercial use, and ShareAlike. They are **not covered by this repository's MIT code license**. No standalone role image is bundled.
 
-本项目代码的 MIT 授权与免责声明见 [LICENSE](LICENSE)。经编辑的演示截图 `docs/media/plugin-widget-demo.png` 使用本机改色的 `maid-atelier` 自定义角色。修改包括黑发及配色调整、头像裁切，以及截图中的余额替换和演示标记。该图按 [CC BY-NC-SA 4.0 美术条款](https://github.com/Small-tailqwq/dsh-deep-whale/blob/main/maid-atelier/LICENSE-ARTWORK) 使用：署名、非商业、相同方式共享，**不适用本仓库代码的 MIT 许可**。本仓库不单独分发角色图文件。
+本项目代码的 MIT 授权与免责声明见 [LICENSE](LICENSE)。经编辑的演示截图 `docs/media/plugin-widget-demo.png` 和两张合成动图 `docs/media/balance-update.gif`、`docs/media/charge-breakdown.gif` 都使用本机改色的 `maid-atelier` 自定义角色。修改包括黑发及配色调整、头像裁切、截图余额替换和演示标记，以及 GIF 中的虚构余额与扣费动画合成。这三份素材按 [CC BY-NC-SA 4.0 美术条款](https://github.com/Small-tailqwq/dsh-deep-whale/blob/main/maid-atelier/LICENSE-ARTWORK) 使用：署名、非商业、相同方式共享，**不适用本仓库代码的 MIT 许可**。本仓库不单独分发角色图文件。
 
 The optional hit reaction takes **interaction inspiration** from `dsh-damage-pulse`'s event-driven feedback. The animation, setting, and persistence code here are original; no character asset or implementation code was copied from that plugin. Its extra blue-haired character is not included in this repository.
 

@@ -4,17 +4,17 @@
 
 ## Demo
 
-The main image is an edited **screenshot of the actual widget**, supplied by the user, with fictional amounts. Its black-haired custom character is a locally recolored and cropped adaptation of `maid-atelier` art, under **CC BY-NC-SA 4.0**, outside this repository's MIT code license. Attribution: 上善 → ZipZipPipe → Small-tailqwq; see the modification notice below. The GIFs use original geometric illustrations and are not runtime recordings.
+The main image is an edited **screenshot of the actual widget**, supplied by the user, with fictional amounts. The two GIFs use the same locally customized black whale character to illustrate balance updates and sequential charge text beside the character. They are programmatically composed demonstrations, **not runtime recordings or proof of an end-to-end charge test**. The black-haired character is a locally recolored and cropped adaptation of `maid-atelier` art. The main image and GIFs follow **CC BY-NC-SA 4.0**, outside this repository's MIT code license. Attribution: 上善 → ZipZipPipe → Small-tailqwq; see the [modification notice](THIRD_PARTY_NOTICES.md).
 
 ![Locally customized whale character with fictional balance values](docs/media/plugin-widget-demo.png)
 
 | Balance update illustration | Charge breakdown illustration |
 | --- | --- |
-| ![Fictional balance update animation](docs/media/balance-update.gif) | ![Fictional per-call charge animation](docs/media/charge-breakdown.gif) |
+| ![Black whale widget with fictional balance update](docs/media/balance-update.gif) | ![Black whale widget with sequential charge indicators](docs/media/charge-breakdown.gif) |
 
 [Settings illustration](docs/media/settings.png) · [Media notes and regeneration](docs/media/README.md)
 
-This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches the widget plugin and, on the legacy `dsh-damage-pulse` 4.0.11 path only, the billing plugin. It does not redistribute the plugin packages. The edited demo screenshot contains CC BY-NC-SA 4.0 character artwork and is not MIT-licensed.
+This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches the widget plugin and, on the legacy `dsh-damage-pulse` 4.0.11 path only, the billing plugin. It does not redistribute the plugin packages. The edited demo screenshot and two GIFs contain CC BY-NC-SA 4.0 character artwork and are not MIT-licensed.
 
 This is an independent community patch and is not affiliated with DSH or the maintainers of either dependency.
 
@@ -85,8 +85,9 @@ payload/patch_whale_widget.py Widget host and front-end patch
 payload/patch_damage_pulse.py Billing host and client patch
 payload/balbox_patch.js       Injected balance panel and menu code
 tests/test_install.py         Installer behavior tests
-tools/render_demo.py          Original demo media renderer
-docs/media/                   Edited widget screenshot and original illustrative media
+tools/render_demo.py          Original geometric PNG renderer
+tools/render_widget_gifs.py   Widget GIF renderer (needs a local licensed role PNG)
+docs/media/                   Edited widget screenshot and illustrative media
 docs/VALIDATION.md            Current runtime validation record
 README.md                     Chinese guide
 NOTES.md                      Chinese implementation notes
@@ -94,4 +95,4 @@ LICENSE                       MIT license for this project's original code
 THIRD_PARTY_NOTICES.md        Dependency credits and licenses
 ```
 
-The original code in this repository is released under the [MIT License](LICENSE). The event-driven hit reaction is inspired by `dsh-damage-pulse`; its animation and settings code are independently written. The extra blue-haired character and its assets are not included. See [third-party notices](THIRD_PARTY_NOTICES.md) for dependency credits and the edited screenshot's artwork status.
+The original code in this repository is released under the [MIT License](LICENSE). The event-driven hit reaction is inspired by `dsh-damage-pulse`; its animation and settings code are independently written. The extra blue-haired character and its assets are not included. See [third-party notices](THIRD_PARTY_NOTICES.md) for dependency credits and demo artwork licensing.

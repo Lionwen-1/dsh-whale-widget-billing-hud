@@ -4,13 +4,13 @@
 
 ## 演示 / Demo
 
-主图由用户提供的**实际插件画面**编辑而成，余额已替换为虚构演示数值；黑发角色是本机对 `maid-atelier` 美术的改色与裁切，演示图按 **CC BY-NC-SA 4.0** 标注，**不属于本仓库代码的 MIT 许可范围**。署名：上善 → ZipZipPipe → Small-tailqwq；本机黑发改色与演示图编辑另行说明。下方 GIF 是原创几何图形示意，并非真实录屏。
+主图由用户提供的**实际插件画面**编辑而成，余额已替换为虚构演示数值。下方两张 GIF 沿用本机黑鲸角色，分别模拟余额更新和角色旁逐项扣费飘字；它们是程序合成的功能演示，**并非真实录屏或端到端扣费验证**。黑发角色是本机对 `maid-atelier` 美术的改色与裁切；包含该角色的主图和 GIF 均按 **CC BY-NC-SA 4.0** 使用，**不属于本仓库代码的 MIT 许可范围**。署名：上善 → ZipZipPipe → Small-tailqwq；修改说明见[第三方声明](THIRD_PARTY_NOTICES.md)。
 
 ![本机黑鲸自定义角色与虚构余额的演示图](docs/media/plugin-widget-demo.png)
 
 | 余额更新示意 / Balance update | 单次费用示意 / Charge breakdown |
 | --- | --- |
-| ![虚构余额更新动画](docs/media/balance-update.gif) | ![虚构单次费用动画](docs/media/charge-breakdown.gif) |
+| ![黑鲸挂件虚构余额更新动画](docs/media/balance-update.gif) | ![黑鲸挂件逐项扣费飘字演示动画](docs/media/charge-breakdown.gif) |
 
 [查看设置示意图](docs/media/settings.png) · [素材来源、许可与再生成方法](docs/media/README.md)
 
