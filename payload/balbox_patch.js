@@ -6,6 +6,7 @@ var DSHW_BALBOX_Y_KEY = 'dshw-balance-box-y'      // 距挂件盒底（px）—�
 var DSHW_BALBOX_PAD_KEY = 'dshw-balance-box-pad'  // 上下内边距（px）= 厚度
 var DSHW_BALBOX_FS_KEY = 'dshw-balance-box-fs'    // 第一行字号（px）
 var DSHW_BALBOX_HIDE_KEY = 'dshw-balance-box-hidden'
+var DSHW_HIT_KEY = 'dshw-hit-enabled'             // '1' = 扣费时播放本挂件的受击动作；默认关闭
 var DSHW_BALBOX_W_DEFAULT = 62
 var DSHW_BALBOX_X_DEFAULT = 39
 var DSHW_BALBOX_Y_DEFAULT = 5
@@ -65,6 +66,7 @@ function dshwBalBoxSnapshot() {
     popy: dshwBalBoxNum(DSHW_POP_Y_KEY, 0, -5000, 5000),
     pgrip: dshwBalBoxLs(DSHW_POP_GRIP_KEY) === '1',
     hidden: dshwBalBoxLs(DSHW_BALBOX_HIDE_KEY) === '1',
+    hit: dshwBalBoxLs(DSHW_HIT_KEY) === '1',
   }
 }
 function dshwBalBoxPush() {
@@ -99,6 +101,7 @@ function dshwBalBoxPull() {
         if (isFinite(Number(cfg.popy))) dshwBalBoxLsSet(DSHW_POP_Y_KEY, String(Number(cfg.popy)))
         if (typeof cfg.pgrip === 'boolean') dshwBalBoxLsSet(DSHW_POP_GRIP_KEY, cfg.pgrip ? null : '1')
         if (typeof cfg.hidden === 'boolean') dshwBalBoxLsSet(DSHW_BALBOX_HIDE_KEY, cfg.hidden ? '1' : null)
+        if (typeof cfg.hit === 'boolean') dshwBalBoxLsSet(DSHW_HIT_KEY, cfg.hit ? '1' : null)
         dshwBalBoxApply()
         dshwApplyPopScale()
         try { dshwRepaintBubble() } catch (e) {}
@@ -464,6 +467,21 @@ function dshwBalSettingsMount(parent) {
     })
     rowGrip.appendChild(gripChk)
     parent.appendChild(rowGrip)
+
+    var rowHit = menuRow()
+    rowHit.appendChild(menuLabel('受击动作'))
+    var hitChk = document.createElement('input')
+    hitChk.type = 'checkbox'
+    hitChk.className = 'dshwv-check'
+    hitChk.style.marginLeft = 'auto'
+    hitChk.checked = dshwBalBoxLs(DSHW_HIT_KEY) === '1'
+    hitChk.title = '开启后每次扣费让当前黑鲸角色轻微受击；关闭后仍显示扣费飘字'
+    hitChk.addEventListener('change', function () {
+      dshwBalBoxLsSet(DSHW_HIT_KEY, hitChk.checked ? '1' : null)
+      dshwBalBoxPush()
+    })
+    rowHit.appendChild(hitChk)
+    parent.appendChild(rowHit)
   } catch (e) {}
 }
 
@@ -523,6 +541,28 @@ var DSHW_CHARGE_MS = 1000
 var dshwChargeSeq = null
 var dshwChargeStream
 var dshwChargeSeeded = false
+var dshwLastHitAt = 0
+
+// 灵感：dsh-damage-pulse (MIT) 的「事件驱动受击反馈」；动画与设置实现均为本项目原创。
+// 仅作用于当前已选中的挂件 <img>，不携带或切换任何第三方角色素材。
+function dshwPlayHit() {
+  try {
+    if (dshwBalBoxLs(DSHW_HIT_KEY) !== '1') return
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    var now = Date.now()
+    if (now - dshwLastHitAt < 800) return
+    var target = document.querySelector('.dshwv-root .dshwv-img')
+    if (!target || typeof target.animate !== 'function') return
+    dshwLastHitAt = now
+    target.animate([
+      { transform: 'translateX(0) rotate(0deg)', filter: 'brightness(1)' },
+      { transform: 'translateX(-4px) rotate(-3deg)', filter: 'brightness(1.28)', offset: 0.22 },
+      { transform: 'translateX(4px) rotate(2deg)', filter: 'brightness(1.12)', offset: 0.48 },
+      { transform: 'translateX(-2px) rotate(-1deg)', filter: 'brightness(1.04)', offset: 0.74 },
+      { transform: 'translateX(0) rotate(0deg)', filter: 'brightness(1)' },
+    ], { duration: 560, easing: 'ease-out' })
+  } catch (e) {}
+}
 
 function dshwDamageLayer() {
   try {
@@ -612,6 +652,7 @@ function dshwChargePoll() {
           var total = 0
           for (var k = 0; k < parts.length; k++) total += parts[k].cost
           if (!parts.length) { total = Number(ev.cost) || 0; parts = [{ label: '扣费', cost: total }] }
+          if (total > 0) dshwPlayHit()
           for (var p = 0; p < parts.length; p++) {
             // 一条一条跳：每条间隔 900ms，纵向每 22px 一行，从上往下排（最多 5 行循环）
             dshwSpawnDamage(parts[p].label, parts[p].cost, 4 + (slot % 5) * 22, (slot % 5) * 900)

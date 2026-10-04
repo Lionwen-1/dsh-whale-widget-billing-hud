@@ -152,7 +152,7 @@ BALBOX_HOST = """
           try {
             const parsed = JSON.parse(await readBody(req));
             const out = {};
-            for (const k of ['x', 'y', 'w', 'pad', 'fs', 'bscale', 'pscale', 'popx', 'popy', 'pgrip', 'hidden']) {
+            for (const k of ['x', 'y', 'w', 'pad', 'fs', 'bscale', 'pscale', 'popx', 'popy', 'pgrip', 'hidden', 'hit']) {
               const v = parsed ? parsed[k] : void 0;
               if (typeof v === 'number' && isFinite(v)) out[k] = v;
               else if (typeof v === 'boolean') out[k] = v;

@@ -4,9 +4,9 @@
 
 ## Demo
 
-These illustrations use **fictional amounts and original geometric whale artwork**. They are **not screenshots or recordings of DSH**. In particular, the charge animation does not claim that the current DSH runtime has passed an end-to-end billing test.
+The main image is an edited **screenshot of the actual widget**, supplied by the user, with fictional amounts. Its black-haired custom character is a locally recolored and cropped adaptation of `maid-atelier` art, under **CC BY-NC-SA 4.0**, outside this repository's MIT code license. Attribution: 上善 → ZipZipPipe → Small-tailqwq; see the modification notice below. The GIFs use original geometric illustrations and are not runtime recordings.
 
-![Illustrative balance and usage overview](docs/media/overview.png)
+![Locally customized whale character with fictional balance values](docs/media/plugin-widget-demo.png)
 
 | Balance update illustration | Charge breakdown illustration |
 | --- | --- |
@@ -14,7 +14,7 @@ These illustrations use **fictional amounts and original geometric whale artwork
 
 [Settings illustration](docs/media/settings.png) · [Media notes and regeneration](docs/media/README.md)
 
-This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches two separately installed community plugins. The repository contains only our patch scripts and injected code; it does not redistribute the plugins or artwork.
+This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches the widget plugin and, on the legacy `dsh-damage-pulse` 4.0.11 path only, the billing plugin. It does not redistribute the plugin packages. The edited demo screenshot contains CC BY-NC-SA 4.0 character artwork and is not MIT-licensed.
 
 This is an independent community patch and is not affiliated with DSH or the maintainers of either dependency.
 
@@ -24,15 +24,16 @@ This is an independent community patch and is not affiliated with DSH or the mai
 | --- | --- |
 | Persistent balance panel | Keep the account balance and today's usage visible below the character. Move, resize, or hide the panel. |
 | Per-call charge indicators | Show each model call's charge near the character, including cache hit, cache miss, and output costs when the event provides a breakdown. |
+| Optional hit reaction | Lightly animate the currently selected widget character on each charge. Toggle it in the ☰ settings menu; off by default. |
 | Bubble controls | Adjust the bubble's text size, overall scale, and position. Save settings in browser storage and a local DSH configuration file. |
 | Installer checks | Verify plugin versions and source anchors before modifying either plugin. Keep original-file backups for rollback. |
 
 ## Requirements and compatibility
 
 - DSH desktop must have run at least once, creating a profile under `~/.dsh/profiles/`.
-- Install `dsh-whale-widget` **0.3.12** and `dsh-damage-pulse` **4.0.11** in the same DSH profile.
+- Install `dsh-whale-widget` **0.3.12** and `dsh-damage-pulse` **4.2.3** in the same DSH profile for DSH `0.2.0-rc.2`. The legacy `4.0.11` billing path remains for DSH `0.1.7-rc.2`.
 - Python 3.8 or newer. Node.js is optional but enables JavaScript syntax checks during installation.
-- The complete workflow was tested on Windows with DSH **0.1.7-rc.2**. On **0.2.0-rc.2**, the widget and balance panel render, but DSH blocks the billing plugin at its compatibility gate. Per-call charging has therefore not been verified end to end on that version. A passing `--check` confirms plugin versions and source anchors only; it does not prove runtime compatibility. See the [validation record](docs/VALIDATION.md).
+- The legacy workflow was tested on Windows with DSH **0.1.7-rc.2**. On **0.2.0-rc.2**, billing plugin `4.0.11` is blocked; `4.2.3` loads and natively supports `deepseek-account` and charge events. A real model call is still needed to complete end-to-end verification of the widget's floating charge text. See the [validation record](docs/VALIDATION.md).
 
 ## Install
 
@@ -50,7 +51,7 @@ python install.py --check --plugin-root "/path/to/profile/node_modules"
 python install.py --plugin-root "/path/to/profile/node_modules"
 ```
 
-The installer checks both plugins before writing either one. On first use, it saves original files under `payload/whale-widget-backup-0.3.12/` and `payload/damage-pulse-backup-4.0.11/`. Subsequent runs restore those originals before applying the patches, avoiding stacked edits. The backup directories are ignored by Git. A failed preflight or patch returns a nonzero exit code; if a failure occurs after patching starts, inspect the plugins and restore the backups before retrying.
+The installer checks both plugins before writing. It backs up and patches the widget. For billing plugin `4.0.11`, it also backs up and patches the billing files. For `4.2.3`, it verifies the packaged billing module and leaves that plugin untouched. Backup directories are ignored by Git. A failed preflight or patch returns a nonzero exit code.
 
 **Fully restart DSH after installation.** Reloading the desktop window does not reload the injected front-end script.
 
@@ -58,7 +59,7 @@ The installer checks both plugins before writing either one. On first use, it sa
 
 After restarting DSH:
 
-1. Open the widget's `☰` menu and look for the balance panel and bubble controls.
+1. Open the widget's `☰` menu and look for the balance panel, bubble controls, and the optional **Hit reaction** toggle (off by default).
 2. Confirm the balance panel appears below the character and responds to drag and resize actions.
 3. Make a model call and confirm that a charge indicator appears. This needs `dsh-damage-pulse` to be running and recording charge events.
 
@@ -72,9 +73,9 @@ node --check payload/balbox_patch.js
 
 ## Changes and rollback
 
-The package patches the whale widget's host and front-end files, plus the billing plugin's host and client files. The patches add DSH account-balance fallback, enable billing for the DSH account provider, display charge events in the widget, and persist display settings. They do not modify DSH itself.
+The package patches the whale widget's host and front-end files. The legacy `4.0.11` path also patches the billing plugin's host and client files to support DSH account billing. Billing plugin `4.2.3` already provides that support and is not modified. The widget patch displays charge events and persists display settings. DSH itself is not modified.
 
-To roll back, copy the saved original files from the two backup directories into the matching plugin paths, or reinstall both community plugins through DSH. A plugin upgrade overwrites the patches. The installer rejects unsupported plugin versions rather than applying old backups to new code.
+To roll back, copy the saved original widget files from `payload/whale-widget-backup-0.3.12/` into the matching plugin paths, or reinstall the widget plugin through DSH. On the legacy `4.0.11` path, also restore `payload/damage-pulse-backup-4.0.11/` or reinstall that plugin. A widget upgrade overwrites its patch. The installer rejects unsupported plugin versions rather than applying old backups to new code.
 
 ## Repository contents
 
@@ -85,7 +86,7 @@ payload/patch_damage_pulse.py Billing host and client patch
 payload/balbox_patch.js       Injected balance panel and menu code
 tests/test_install.py         Installer behavior tests
 tools/render_demo.py          Original demo media renderer
-docs/media/                   Fictional PNG and GIF illustrations
+docs/media/                   Edited widget screenshot and original illustrative media
 docs/VALIDATION.md            Current runtime validation record
 README.md                     Chinese guide
 NOTES.md                      Chinese implementation notes
@@ -93,4 +94,4 @@ LICENSE                       MIT license for this project's original code
 THIRD_PARTY_NOTICES.md        Dependency credits and licenses
 ```
 
-The original code in this repository is released under the [MIT License](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for dependency credits. DSH, the two community plugins, and any character artwork retain their own licenses.
+The original code in this repository is released under the [MIT License](LICENSE). The event-driven hit reaction is inspired by `dsh-damage-pulse`; its animation and settings code are independently written. The extra blue-haired character and its assets are not included. See [third-party notices](THIRD_PARTY_NOTICES.md) for dependency credits and the edited screenshot's artwork status.
