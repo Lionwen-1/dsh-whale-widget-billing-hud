@@ -1,8 +1,10 @@
 # DSH Whale Widget Billing HUD
 
-[中文说明](README.md) · [Implementation notes (Chinese)](NOTES.md)
+[中文说明](README.md) · [Implementation notes (Chinese)](NOTES.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 This package adds a balance display, per-call charge indicators, and movable bubble controls to the DSH desktop whale widget. It patches two separately installed community plugins. The repository contains only our patch scripts and injected code; it does not redistribute the plugins or artwork.
+
+This is an independent community patch and is not affiliated with DSH or the maintainers of either dependency.
 
 ## What it is for
 
@@ -72,7 +74,8 @@ payload/balbox_patch.js       Injected balance panel and menu code
 tests/test_install.py         Installer behavior tests
 README.md                     Chinese guide
 NOTES.md                      Chinese implementation notes
-LICENSE.md                    License statement
+LICENSE                       MIT license for this project's original code
+THIRD_PARTY_NOTICES.md        Dependency credits and licenses
 ```
 
-The original code in this repository is all rights reserved; see [LICENSE.md](LICENSE.md). DSH, the two community plugins, and any character artwork retain their own licenses.
+The original code in this repository is released under the [MIT License](LICENSE). See [third-party notices](THIRD_PARTY_NOTICES.md) for dependency credits. DSH, the two community plugins, and any character artwork retain their own licenses.

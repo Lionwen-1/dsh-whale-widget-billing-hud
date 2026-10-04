@@ -1,10 +1,12 @@
 # DSH 黑鲸女仆挂件增强包
 
-[English](README.en.md) · [机制与排错](NOTES.md)
+[English](README.en.md) · [机制与排错](NOTES.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
 
 ## 项目简介 / Overview
 
 **中文：** 这是给 DSH 桌面端小鲸鱼娘挂件使用的本地补丁包，将挂件变成模型调用费用与余额的可视化仪表。它依赖现有社区插件，仓库只保存补丁脚本和注入代码。
+
+本项目是独立的社区补丁，与 DSH 或两款依赖插件的维护者没有隶属关系。
 
 **English:** This local patch package turns the DSH desktop whale widget into a visual dashboard for model charges and account balance. It works with existing community plugins; this repository contains only the patch scripts and injected code.
 
@@ -148,7 +150,7 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 - 挂件本体：**dsh-whale-widget**（社区插件）
 - 扣费数据：**dsh-damage-pulse / dsh-token-monitor**（社区插件）
 - 本仓库只包含**本地补丁脚本与注入代码**，不包含上述插件源码，也不包含任何角色美术资源。首次安装产生的原版备份只留在本机，不纳入 Git
-- 本仓库自有代码保留所有权利，详见 `LICENSE.md`；第三方插件及美术资源遵循各自许可
+- 本仓库自有代码以 **MIT** 许可证开源，详见 [LICENSE](LICENSE)；依赖插件的署名与许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。本仓库不包含第三方插件源码或美术资源
 - 若你另外用了黑鲸女仆皮肤（`maid-atelier`）：其插画为 **CC BY-NC-SA 4.0**（署名 上善 → ZipZipPipe → Small-tailqwq，**禁止商用**），代码为 MIT
 
 ## 七、已知限制
@@ -168,7 +170,8 @@ dsh-whale-widget-billing-hud/
 ├─ README.md                      本文件
 ├─ README.en.md                   English guide
 ├─ NOTES.md                       机制说明与踩坑记录（想改代码时看）
-├─ LICENSE.md                     本仓库源码许可说明
+├─ LICENSE                        本仓库 MIT 许可证
+├─ THIRD_PARTY_NOTICES.md         依赖插件的署名与许可
 ├─ tests/                        安装器行为测试
 └─ payload/
    ├─ patch_whale_widget.py       挂件补丁（含注入代码）
