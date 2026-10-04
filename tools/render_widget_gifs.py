@@ -163,9 +163,9 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     balance_frames = [make_frame(role, closed_role, i) for i in range(34)]
     charge_frames = [make_frame(role, closed_role, i, charge=True) for i in range(44)]
-    save_gif(OUT / "balance-update.gif", balance_frames, 120)
+    save_gif(OUT / "balance-update-overhead.gif", balance_frames, 120)
     save_gif(OUT / "charge-breakdown.gif", charge_frames, 110)
-    for name in ("balance-update.gif", "charge-breakdown.gif"):
+    for name in ("balance-update-overhead.gif", "charge-breakdown.gif"):
         path = OUT / name
         print(f"{path.relative_to(ROOT)}: {path.stat().st_size:,} bytes")
 

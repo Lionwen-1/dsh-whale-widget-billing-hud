@@ -10,7 +10,7 @@
 
 | 余额更新示意 / Balance update | 单次费用示意 / Charge breakdown |
 | --- | --- |
-| ![黑鲸挂件虚构余额更新动画](docs/media/balance-update.gif) | ![黑鲸挂件逐项扣费飘字演示动画](docs/media/charge-breakdown.gif) |
+| ![黑鲸挂件头顶扣费与余额更新动画](docs/media/balance-update-overhead.gif) | ![黑鲸挂件逐项扣费飘字演示动画](docs/media/charge-breakdown.gif) |
 
 [查看设置示意图](docs/media/settings.png) · [素材来源、许可与再生成方法](docs/media/README.md)
 

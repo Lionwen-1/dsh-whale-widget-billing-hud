@@ -10,7 +10,7 @@ The main image is an edited **screenshot of the actual widget**, supplied by the
 
 | Balance update illustration | Charge breakdown illustration |
 | --- | --- |
-| ![Black whale widget with fictional balance update](docs/media/balance-update.gif) | ![Black whale widget with sequential charge indicators](docs/media/charge-breakdown.gif) |
+| ![Black whale widget with overhead charge and balance update](docs/media/balance-update-overhead.gif) | ![Black whale widget with sequential charge indicators](docs/media/charge-breakdown.gif) |
 
 [Settings illustration](docs/media/settings.png) · [Media notes and regeneration](docs/media/README.md)
 
