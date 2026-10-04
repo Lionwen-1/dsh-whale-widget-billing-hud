@@ -33,7 +33,7 @@ This is an independent community patch and is not affiliated with DSH or the mai
 - DSH desktop must have run at least once, creating a profile under `~/.dsh/profiles/`.
 - Install `dsh-whale-widget` **0.3.12** and `dsh-damage-pulse` **4.2.3** in the same DSH profile for DSH `0.2.0-rc.2`. The legacy `4.0.11` billing path remains for DSH `0.1.7-rc.2`.
 - Python 3.8 or newer. Node.js is optional but enables JavaScript syntax checks during installation.
-- The legacy workflow was tested on Windows with DSH **0.1.7-rc.2**. On **0.2.0-rc.2**, billing plugin `4.0.11` is blocked; `4.2.3` loads and natively supports `deepseek-account` and charge events. A real model call is still needed to complete end-to-end verification of the widget's floating charge text. See the [validation record](docs/VALIDATION.md).
+- The legacy workflow was tested on Windows with DSH **0.1.7-rc.2**. On **0.2.0-rc.2**, billing plugin `4.0.11` is blocked; `4.2.3` loads and natively supports `deepseek-account` and charge events. One real model call produced a positively priced account-billing record; the brief floating animation was not captured, so visual end-to-end verification remains open. See the [validation record](docs/VALIDATION.md).
 
 ## Install
 
