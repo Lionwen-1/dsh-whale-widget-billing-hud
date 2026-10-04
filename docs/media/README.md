@@ -19,7 +19,10 @@ The main image, GIFs, and `tools/assets/black-whale-closed-eyes.png` partial bli
 | `settings.png` | 设置项 / Settings |
 | `balance-update-overhead.gif` | 黑鲸挂件的余额更新、头顶扣费和眨眼合成动画 / Composed balance update, overhead charge, and blink |
 | `charge-breakdown.gif` | 黑鲸挂件头顶逐项扣费飘字与眨眼合成动画 / Composed overhead charges and blink |
+| `support-lionwen.png` | 维护者提供的自愿赞赏码 / Maintainer-provided voluntary support code |
 | `tools/assets/black-whale-closed-eyes.png` | 仅含闭眼局部的叠加素材 / Partial closed-eye overlay only |
+
+`support-lionwen.png` 为维护者提供的原图，未做裁切或重绘；它只用于展示自愿赞赏入口，不适用仓库代码的 MIT 许可。The support image was supplied by the maintainer and is included unchanged. It is a voluntary support option, outside the code's MIT license.
 
 再生成 / Regenerate:
 

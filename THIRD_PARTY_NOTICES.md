@@ -1,8 +1,8 @@
 # Third-party notices / 第三方声明
 
-This repository contains patch scripts, anchor strings, original widget additions, one edited demo screenshot, two composed GIFs, and a partial closed-eye overlay. It does not bundle either third-party plugin or the complete character image. Install the plugins separately under their own licenses.
+This repository contains patch scripts, anchor strings, original widget additions, one edited demo screenshot, two composed GIFs, a partial closed-eye overlay, and a maintainer-supplied support image. It does not bundle either third-party plugin or the complete character image. Install the plugins separately under their own licenses.
 
-本仓库包含补丁脚本、定位原插件代码所需的锚点字符串、自写挂件功能、一张经编辑的演示截图、两张合成 GIF 和一份闭眼局部叠加素材；不打包第三方插件或完整角色原图。请按各项目自身许可单独安装插件。
+本仓库包含补丁脚本、定位原插件代码所需的锚点字符串、自写挂件功能、一张经编辑的演示截图、两张合成 GIF、一份闭眼局部叠加素材和维护者提供的赞赏图；不打包第三方插件或完整角色原图。请按各项目自身许可单独安装插件。
 
 | Dependency / 依赖 | Version / 版本 | License / 许可 | Notice / 署名 |
 | --- | --- | --- | --- |
@@ -17,3 +17,7 @@ The MIT permission and warranty terms for this project's code appear in [LICENSE
 The optional hit reaction takes **interaction inspiration** from `dsh-damage-pulse`'s event-driven feedback. The animation, setting, and persistence code here are original; no character asset or implementation code was copied from that plugin. Its extra blue-haired character is not included in this repository.
 
 可选受击动作借鉴了 `dsh-damage-pulse` 的**事件驱动反馈思路**。本仓库的动画、设置及持久化代码独立编写，未复制该插件的角色素材或实现代码；额外的蓝发角色不纳入本仓库。
+
+The maintainer supplied `docs/media/support-lionwen.png` as an optional support image. It is included unchanged and is not covered by the MIT code license or the character artwork license.
+
+`docs/media/support-lionwen.png` 是维护者提供的自愿赞赏图，按原图收录；不属于代码的 MIT 许可或角色美术许可范围。

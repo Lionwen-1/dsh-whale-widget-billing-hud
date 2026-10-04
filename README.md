@@ -1,68 +1,72 @@
-# DSH 黑鲸女仆挂件增强包
+# DSH 小鲸鱼挂件计费增强
 
-[English](README.en.md) · [验证记录](docs/VALIDATION.md) · [机制与排错](NOTES.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
+让 DSH 桌面挂件成为随手可看的用量面板：**脚下显示余额与今日用量，头顶逐项提示模型调用费用**。还可以移动和缩放气泡、调整余额框，并按需开启扣费时的轻微受击动作。
 
-## 演示 / Demo
+[English](README.en.md) · [适用版本](#适用版本与验证范围) · [快速开始](#快速开始) · [验证记录](docs/VALIDATION.md) · [机制与排错](NOTES.md) · [素材与许可](THIRD_PARTY_NOTICES.md) · [支持项目](#支持项目)
 
-主图由用户提供的**实际插件画面**编辑而成，余额已替换为虚构演示数值。下方两张 GIF 沿用本机黑鲸角色，模拟余额更新、自然眨眼，以及在角色头顶逐项跳出的扣费红字；它们是程序合成的功能演示，**并非真实录屏或端到端扣费验证**。黑发角色是本机对 `maid-atelier` 美术的改色与裁切；包含该角色的主图、GIF 和眨眼局部素材均按 **CC BY-NC-SA 4.0** 使用，**不属于本仓库代码的 MIT 许可范围**。署名：上善 → ZipZipPipe → Small-tailqwq；修改说明见[第三方声明](THIRD_PARTY_NOTICES.md)。
+这是基于 [`dsh-whale-widget`](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) 和 [`dsh-damage-pulse`](https://github.com/wssfk12138/dsh-damage-pulse) 的**独立社区补丁**，适合希望在现有角色上集中查看余额与费用、无需再开一套角色窗口的用户。仓库提供安装脚本和新增功能代码，不分发两款插件或完整角色原图，也不修改 DSH 本体。
 
-![本机黑鲸自定义角色与虚构余额的演示图](docs/media/plugin-widget-demo.png)
+## 效果预览
 
-| 余额更新示意 / Balance update | 单次费用示意 / Charge breakdown |
+![黑鲸挂件、余额气泡与脚下余额框](docs/media/plugin-widget-demo.png)
+
+| 余额更新与头顶扣费 | 逐项费用提示 |
 | --- | --- |
-| ![黑鲸挂件头顶扣费与余额更新动画](docs/media/balance-update-overhead.gif) | ![黑鲸挂件逐项扣费飘字演示动画](docs/media/charge-breakdown.gif) |
+| ![余额变化与头顶扣费动画](docs/media/balance-update-overhead.gif) | ![命中、未命中和输出费用依次飘出](docs/media/charge-breakdown.gif) |
 
-[查看设置示意图](docs/media/settings.png) · [素材来源、许可与再生成方法](docs/media/README.md)
+主图改自用户提供的实际挂件截图；余额数值已替换为虚构值。GIF 是合成演示，包含眨眼和可选受击效果，**不代表真实扣费动画已完成现场验证**。角色美术按 CC BY-NC-SA 4.0 使用，代码采用 MIT。[素材说明与再生成方法](docs/media/README.md) · [设置示意图](docs/media/settings.png)
 
-## 项目简介 / Overview
+## 能做什么
 
-**中文：** 这是给 DSH 桌面端小鲸鱼娘挂件使用的本地补丁包，将挂件变成模型调用费用与余额的可视化仪表。它依赖现有社区插件，仓库保存我们的补丁脚本、注入代码和演示材料。
-
-本项目是独立的社区补丁，与 DSH 或两款依赖插件的维护者没有隶属关系。
-
-**English:** This local patch package turns the DSH desktop whale widget into a visual dashboard for model charges and account balance. It works with existing community plugins; this repository contains our patch scripts, injected code, and demo media.
-
-## 主要功能与用途 / Features and use cases
-
-| 功能 / Feature | 用途 / Use case |
+| 功能 | 用途 |
 | --- | --- |
-| 常驻余额框 / Persistent balance panel | 在挂件脚下显示余额与今日用量，并可拖动、调整尺寸或隐藏。Show balance and today's usage beneath the widget, with controls to move, resize, or hide the panel. |
-| 单次费用提示 / Per-call charge indicators | 从计费插件读取扣费事件，在角色头顶显示每次调用的费用明细。Read charge events from the billing plugin and display per-call cost details above the character's head. |
-| 可选受击动作 / Optional hit reaction | 每次扣费时让当前挂件角色轻微晃动；在 ☰ 设置里开关，默认关闭。Lightly animate the currently selected widget character on each charge; toggle it in the ☰ menu. Off by default. |
-| 气泡设置 / Bubble controls | 调整气泡字号、整体大小与位置，并保存设置。Adjust bubble text size, overall scale, and position with persistent settings. |
-| 安装保护 / Installation checks | 打补丁前检查指定插件版本和源码锚点，保留原文件备份以便回滚。Check supported plugin versions and source anchors before patching, and keep original-file backups for rollback. |
+| 常驻余额框 | 在角色脚下显示四位小数余额与今日用量；可拖动、调尺寸或隐藏。 |
+| 单次费用飘字 | 从计费插件读取事件，在角色头顶依次显示命中、未命中、输出等费用；退款或加费显示绿字。 |
+| 气泡与挂件设置 | 调整余额气泡的字号、大小和位置；设置保存在 `localStorage` 与 DSH 本地配置中。 |
+| 可选受击动作 | 扣费时让当前角色轻微晃动；在 ☰ 菜单开关，默认关闭。 |
+| 安全安装与回滚 | 安装前检查插件版本和代码锚点，首次修改时备份原文件，重复安装不会叠加补丁。 |
 
-**适合 / For:** 使用指定版本 DSH 插件、希望在桌面上随时查看模型用量与余额的人。Users of the supported DSH plugin versions who want at-a-glance usage and balance information on the desktop.
+## 适用版本与验证范围
 
-> 推荐组合：DSH `0.2.0-rc.2` + `dsh-whale-widget` **0.3.12** + `dsh-damage-pulse` **4.2.3**。旧版 `dsh-damage-pulse` **4.0.11** 仅保留给已验证的 DSH `0.1.7-rc.2` 路线；它在 DSH `0.2.0-rc.2` 会被兼容性门禁拦截。新版计费插件原生支持账号态计费和扣费事件，无需对其打补丁。详见[验证记录](docs/VALIDATION.md)。
-> 效果全部来自**本地补丁**，不改 DSH 本体；每个补丁脚本都**幂等**，重复运行安全。
+| DSH 桌面版 | 挂件插件 | 计费插件 | 安装器行为 |
+| --- | --- | --- | --- |
+| `0.2.0-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.2.3` | 修改挂件；计费插件仅预检，使用其原生账号态计费与事件接口。 |
+| `0.1.7-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.0.11` | 修改挂件和旧版计费插件。 |
+
+Windows 上已验证安装、设置持久化，以及一次真实调用写入正费用账本；**短暂的现场飘字与受击动画尚未捕捉到**。两张 GIF 只说明预期外观。详细证据见[验证记录](docs/VALIDATION.md)。其他版本会被预检拒绝，升级插件后应先核对兼容性。
+
+## 快速开始
+
+先在同一个 DSH profile 中安装上表对应的两款插件，再从仓库根目录运行：
+
+```bash
+python install.py --check
+python install.py
+```
+
+安装后**完整退出并重新打开 DSH**。`Ctrl+R` 不会重新加载启动时注入的前端脚本。多个 profile 同时装有插件时，请使用 `--plugin-root "/path/to/profile/node_modules"` 指定目标；下文有完整说明。
 
 ---
 
-## 一、装之前
+## 安装前准备
 
 | 需要 | 说明 |
 |---|---|
 | DSH 桌面版 | 已安装并**至少启动过一次**（否则没有 `~/.dsh/profiles/`） |
-| 插件 `dsh-whale-widget` | 挂件本体（角色 + 气泡 + 菜单）。需要 `0.3.12` |
-| 插件 `dsh-damage-pulse` | 提供**精确扣费数据**（`/api/token-monitor/charge-events`）。推荐 `4.2.3`；旧 DSH 可用 `4.0.11` |
-| Python 3.8+ | 用来跑补丁脚本（Windows 上 `python install.py`） |
+| 两款社区插件 | 在**同一个 profile** 中安装上表对应版本；计费事件来自 `/api/token-monitor/charge-events` |
+| Python 3.8+ | 运行安装器 |
+| Node.js（可选） | 安装时检查 JavaScript 语法；缺少时跳过此项 |
 
 两个插件都在 DSH 里装好、能正常显示角色之后，再打补丁。
 
 ---
 
-## 二、安装
+## 安装细节
 
 ```bash
-# 1) 检查插件版本与补丁锚点（不改任何文件）
-python install.py --check
-
-# 2) 正式打补丁（幂等，可反复运行）
-python install.py
-
-# 如果多个 profile 同时安装了两款插件，明确指定目标 profile
+# 多个 profile 同时安装了两款插件时，明确指定目标
 python install.py --check --plugin-root "/path/to/profile/node_modules"
+python install.py --plugin-root "/path/to/profile/node_modules"
 ```
 
 脚本会做这些事：
@@ -77,11 +81,11 @@ python install.py --check --plugin-root "/path/to/profile/node_modules"
 
 源码检查可运行 `python -m unittest discover -s tests -v`、`python -m compileall -q install.py payload tests` 和 `node --check payload/balbox_patch.js`。完整打补丁的测试需使用对应版本的原版源码，在隔离的插件目录中运行 `python install.py --plugin-root <测试目录>`；仓库不附带第三方源码。
 
-**打完必须重启 DSH**（整个关掉再打开）。原因：前端脚本的 `<script>` 注入点是 DSH 启动时收集的，`Ctrl+R` 在桌面壳里不会重新拉脚本。
+安装完成后按[快速开始](#快速开始)中的要求完整重启 DSH。
 
 ---
 
-## 三、重启后你会看到
+## 使用与设置
 
 ### 1. 脚下常驻余额条
 
@@ -128,7 +132,7 @@ python install.py --check --plugin-root "/path/to/profile/node_modules"
 
 ---
 
-## 四、动了哪些文件
+## 修改范围
 
 | 文件 | 改动 |
 |---|---|
@@ -138,7 +142,7 @@ python install.py --check --plugin-root "/path/to/profile/node_modules"
 
 ---
 
-## 五、卸载 / 回滚
+## 回滚
 
 安装包的 `payload/` 中保留着**被修改文件的原版备份**（已被 Git 忽略）。挂件备份始终存在；计费插件备份仅在旧版 `4.0.11` 路线产生：
 
@@ -158,16 +162,14 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 
 ---
 
-## 六、出处与许可
+## 许可与来源
 
-- 挂件本体：**dsh-whale-widget**（社区插件）
-- 扣费数据：**dsh-damage-pulse / dsh-token-monitor**（社区插件）
-- 本仓库包含本地补丁脚本、注入代码、一张经编辑截图、两张演示 GIF 和一份眨眼眼部局部素材；不打包原插件源码或完整角色原图。首次安装产生的原版备份只留在本机，不纳入 Git
-- 本仓库自有代码以 **MIT** 许可证开源，详见 [LICENSE](LICENSE)；演示素材中的自定义角色美术按 **CC BY-NC-SA 4.0**，来源、修改与署名见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-- 受击反馈的交互思路参考 `dsh-damage-pulse`；动画、开关和持久化由本项目独立实现，未复制其角色素材或实现代码。额外的蓝发角色不在本仓库中
-- 若你另外用了黑鲸女仆皮肤（`maid-atelier`）：其插画为 **CC BY-NC-SA 4.0**（署名 上善 → ZipZipPipe → Small-tailqwq，**禁止商用**），代码为 MIT
+- 本项目自写的安装器和补丁代码采用 [MIT 许可](LICENSE)；两款依赖插件需分别按其原许可安装，本仓库不附带它们的源码或安装备份。
+- 演示截图、GIF 与眨眼局部包含改编的 `maid-atelier` 角色美术，采用 **CC BY-NC-SA 4.0**，不属于代码的 MIT 许可；完整角色原图不在仓库中。署名链：**上善 → ZipZipPipe → Small-tailqwq**。
+- 受击反馈借鉴 `dsh-damage-pulse` 的事件驱动思路，动画和设置代码独立编写；其额外蓝发角色与素材没有收入本项目。
+- 赞赏码由维护者提供，只作为自愿支持入口。素材修改、授权边界和来源见 [第三方声明](THIRD_PARTY_NOTICES.md)。
 
-## 七、已知限制
+## 已知限制
 
 1. **必须重启 DSH** 才生效（桌面壳不重载前端脚本）
 2. 飘字数据依赖 damage-pulse 的宿主在跑；把它禁用就没红字了
@@ -176,7 +178,7 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 
 ---
 
-## 八、目录结构
+## 文件导航
 
 ```
 dsh-whale-widget-billing-hud/
@@ -186,9 +188,21 @@ dsh-whale-widget-billing-hud/
 ├─ NOTES.md                       机制说明与踩坑记录（想改代码时看）
 ├─ LICENSE                        本仓库 MIT 许可证
 ├─ THIRD_PARTY_NOTICES.md         依赖插件的署名与许可
+├─ docs/
+│  ├─ VALIDATION.md               运行时验证记录
+│  └─ media/                      截图、GIF 与赞赏码
+├─ tools/                         演示素材生成脚本与眨眼局部素材
 ├─ tests/                        安装器行为测试
 └─ payload/
    ├─ patch_whale_widget.py       挂件补丁（含注入代码）
    ├─ patch_damage_pulse.py       计费插件补丁
    └─ balbox_patch.js             注入进挂件前端的那段代码（余额框+飘字+菜单项）
 ```
+
+## 支持项目
+
+这个项目免费使用。如果它帮你把桌面用量看得更清楚，欢迎给仓库点 Star；也可以自愿赞赏维护者 Lionwen。赞赏与功能使用无关。
+
+<a href="docs/media/support-lionwen.png"><img src="docs/media/support-lionwen.png" alt="Lionwen 的赞赏码" width="480"></a>
+
+[打开原尺寸赞赏码](docs/media/support-lionwen.png)
