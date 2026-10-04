@@ -15,7 +15,7 @@
 | 挂件监听代码读取的事件字段与 `4.2.3` 的 `streamId`、`seq`、`events[]`、`breakdown.cacheHit/cacheMiss/output.cost` 对应 / Widget event fields match the new plugin's event shape | 通过静态核对 / Static contract check passed |
 | 仓库安装器测试、Python 与 JavaScript 语法检查 / Installer tests and syntax checks | 通过 / Pass |
 | 隔离目录完整安装两次，挂件宿主及前端文件哈希一致，新版计费文件哈希不变 / Two isolated installs yield identical widget hashes while the modern billing file remains unchanged | 通过 / Pass |
-| DSH 完整重启后菜单显示新增的“受击动作”开关，测试时磁盘设置记录 `hit: true`，测试结束已恢复 `hit: false` / New hit-reaction toggle appears after restart, persisted while enabled, then restored to off | 通过 / Pass |
+| DSH 完整重启后菜单显示新增的“受击动作”开关，开与关均写入磁盘设置 / New hit-reaction toggle appears after restart, and both enabled and disabled states persist | 通过 / Pass |
 | 一条经用户授权的极短模型调用在账本新增 `deepseek-account`、`billingStatus: priced`、正费用记录 / One authorized short model call wrote a positively priced account-billing record | 通过 / Pass |
 | 同一次调用的黑鲸挂件扣费飘字和角色晃动 / Widget floating charge text and hit movement for that call | 未捕捉到短暂动画，待可重复的界面观察 / Transient animation was not captured; repeatable visual check still pending |
 
