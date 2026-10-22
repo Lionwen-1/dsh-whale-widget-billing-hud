@@ -30,10 +30,41 @@
 
 | DSH 桌面版 | 挂件插件 | 计费插件 | 安装器行为 |
 | --- | --- | --- | --- |
+| `0.2.1-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.2.6` | 修改挂件；计费插件仅预检（4.2.x 原生账号态计费）。DSH 升级后可能被版本门禁拦下，需自助授豁免，见下一节 |
 | `0.2.0-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.2.3` | 修改挂件；计费插件仅预检，使用其原生账号态计费与事件接口。 |
 | `0.1.7-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.0.11` | 修改挂件和旧版计费插件。 |
 
-Windows 上已验证安装、设置持久化，以及一次真实调用写入正费用账本；**短暂的现场飘字与受击动画尚未捕捉到**。两张 GIF 只说明预期外观。详细证据见[验证记录](docs/VALIDATION.md)。其他版本会被预检拒绝，升级插件后应先核对兼容性。
+Windows 上已验证安装、设置持久化，以及真实调用写入正费用账本；**短暂的现场飘字动画尚未逐帧捕捉**。两张 GIF 只说明预期外观。详细证据见[验证记录](docs/VALIDATION.md)。其他版本会被预检拒绝，升级插件后应先核对兼容性。
+
+---
+
+## 版本门禁与豁免（DSH 升级后"会话金额/红字消失"先看这里）
+
+DSH 升级可能把计费插件**整个拦在门外**：插件声明支持的 `dsh-*` 版本上限比运行时低一个补丁号，就会被判定 `incompatible-version`，此时它在插件管理器里的 `rows` 是空的——插件根本没加载，于是侧栏会话金额、扣费飘字、账本写入**一起停**。
+
+典型现场（2026-10）：DSH 自动更新到 `0.2.1-rc.2`，而 `dsh-damage-pulse` `4.2.3`～`4.2.6` 的 peer 范围只写到 `0.2.1-rc.1` ⇒ 账本从升级那天起停写。
+
+**判断方法**（任选其一）：
+
+1. 看 `~/.dsh/data/dsh-token-monitor/usage.jsonl` 的最后修改时间是否停在升级日；
+2. 让 Agent 调 `plugin_manager` 的 `list_bundles`，看该插件是否带
+   `"error":{"code":"incompatible-version", ...}` 且 `"rows":[]`；
+3. 看 `~/.dsh/profiles/<profile>/compatibility.json` 里有没有当前版本的豁免记录。
+
+**修复：给"精确版本对"授一次豁免**（不改插件代码，可随时撤销）：
+
+```text
+plugin_manager → set_version_exemption
+  target         = dsh-damage-pulse@4.2.6     # 包名@精确版本，不能写范围
+  runtimeVersion = 0.2.1-rc.2                 # list_version_exemptions 里的 runtimeVersion
+  acceptRisk     = true                       # 先读完下面的风险
+```
+
+授权前请明确知道：豁免的只是"补丁号级别的错配"，多数情况能正常跑，但**不保证**；可能出现插件启动报错、侧栏渲染异常，极端情况影响前端稳定性；插件自身的账本（`~/.dsh/data/dsh-token-monitor/`）建议先备份。撤销豁免即回到"未加载"的安静状态。
+
+> 这里的豁免必须由**用户明确同意**后执行，安装器不会自动改这个设置。
+
+---
 
 ## 快速开始
 
@@ -138,27 +169,30 @@ python install.py --plugin-root "/path/to/profile/node_modules"
 |---|---|
 | `<插件>/dsh-whale-widget/lib/index.js` | 余额缓存 25s→5s；无 API Key 时改走 DSH 账号登录态取余额；新增 `GET/POST /dsh-whale-balbox.json`（余额框设置落盘） |
 | `<插件>/dsh-whale-widget/assets/whale-widget.js` | 注入：脚下余额框、扣费飘字、☰ 菜单设置项（含受击动作开关）、气泡缩放/位移、角色上抬 42px |
-| `<插件>/dsh-damage-pulse/lib/index.js`、`lib/client.js` | **仅 4.0.11**：放开账号态计费资格、补足余额链路并隐藏其自带悬浮窗。**4.2.3 不修改这些文件**；它原生支持账号态与扣费事件，自己的悬浮窗可在插件设置中调整 |
+| `<插件>/dsh-damage-pulse/lib/index.js`、`lib/client.js` | **仅 4.0.11**：放开账号态计费资格、补足余额链路并隐藏其自带悬浮窗。**4.2.x 不改这些文件**：它原生支持账号态与扣费事件。若想连它自带的悬浮窗一起隐去（避免两个人物/两套余额），加 `--hide-billing-float`，由 `payload/patch_damage_pulse_modern.py` 只改 `lib/client.js` 的一行样式 |
 
 ---
 
 ## 回滚
 
-安装包的 `payload/` 中保留着**被修改文件的原版备份**（已被 Git 忽略）。挂件备份始终存在；计费插件备份仅在旧版 `4.0.11` 路线产生：
+安装包的 `payload/` 中保留着**被修改文件的原版备份**（已被 Git 忽略）。挂件备份始终存在；计费插件备份仅在需要手改它的版本产生（旧版 `4.0.11`，或用了 `--hide-billing-float` 的 4.2.x）：
 
 ```
 payload/whale-widget-backup-0.3.12/{index.js,whale-widget.js}
 payload/damage-pulse-backup-4.0.11/{index.js,client.js}
+payload/damage-pulse-backup-<4.2.x 版本号>/client.js
 ```
 
-回滚有两种方式：
+回滚有三种方式：
 
 ```bash
 # 方式一：把备份文件复制回相应插件的 lib/ 或 assets/ 路径
 # 方式二：通过 DSH 插件管理器重新安装原版插件
+# 方式三：只撤销 4.2.x 的"隐去悬浮窗"这一处（保留挂件补丁）
+python payload/patch_damage_pulse_modern.py --restore
 ```
 
-挂件插件升级会覆盖补丁。计费插件 `4.2.3` 无本地补丁；未知新版仍会被预检拦下，需先验证其事件接口和运行时兼容性。
+挂件插件升级会覆盖补丁。计费插件 `4.2.x` 默认无本地补丁；未知新版仍会被预检拦下，需先验证其事件接口和运行时兼容性。**DSH 自身升级**则要另外留意版本门禁，见前文《版本门禁与豁免》。
 
 ---
 
@@ -174,7 +208,8 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 1. **必须重启 DSH** 才生效（桌面壳不重载前端脚本）
 2. 飘字数据依赖 damage-pulse 的宿主在跑；把它禁用就没红字了
 3. 余额小数位、飘字位置/时长、角色上抬高度等都在 `payload/balbox_patch.js` / 补丁脚本里，改了要重跑 `install.py`
-4. Windows + DSH `0.2.0-rc.2` 已验证 `4.2.3` 插件加载、挂件显示、事件格式，以及一次真实调用写入正费用账本；短暂的飘字动画尚未捕捉到，需单独复验。其他平台未验证
+4. Windows + DSH `0.2.1-rc.2` 已验证：4.2.6 需版本豁免才能加载（豁免后账本恢复写入）、挂件侧栏金额与红字恢复、设置项全部落盘；`0.2.0-rc.2` 上验证过 4.2.3 的事件格式与真实扣费。短暂的飘字动画仍未逐帧捕捉。其他平台未验证
+5. **DSH 每次大版本升级后都要复查插件是否仍被版本门禁拦下**（看 `rows` 是否为空），这类拦截是静默的：界面只是"金额不见了"，不会弹错误
 
 ---
 
@@ -182,7 +217,7 @@ payload/damage-pulse-backup-4.0.11/{index.js,client.js}
 
 ```
 dsh-whale-widget-billing-hud/
-├─ install.py                     一键安装器（--check 可空跑）
+├─ install.py                     一键安装器（--check 空跑 / --hide-billing-float）
 ├─ README.md                      本文件
 ├─ README.en.md                   English guide
 ├─ NOTES.md                       机制说明与踩坑记录（想改代码时看）
@@ -195,7 +230,8 @@ dsh-whale-widget-billing-hud/
 ├─ tests/                        安装器行为测试
 └─ payload/
    ├─ patch_whale_widget.py       挂件补丁（含注入代码）
-   ├─ patch_damage_pulse.py       计费插件补丁
+   ├─ patch_damage_pulse.py       旧版 4.0.11 的计费插件补丁
+   ├─ patch_damage_pulse_modern.py 4.2.x 外观补丁（隐去自带浮窗 / --restore）
    └─ balbox_patch.js             注入进挂件前端的那段代码（余额框+飘字+菜单项）
 ```
 

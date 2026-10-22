@@ -75,5 +75,49 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(commands, [])
 
 
+    def write_modern_runtime(self, version):
+        """Fake a 4.2.x runtime payload so the modern preflight can be exercised."""
+        runtime = os.path.join(self.tempdir.name, "dsh-damage-pulse", "runtime")
+        os.makedirs(os.path.join(runtime, "host"), exist_ok=True)
+        with open(os.path.join(runtime, "manifest.json"), "w", encoding="utf-8") as fh:
+            json.dump({"version": version, "modules": [{"id": "billing", "files": [
+                {"root": "host", "path": "billing.mjs"}]}]}, fh)
+        anchors = (
+            'TOKEN_MONITOR_CHARGE_EVENTS_PATH = "/api/token-monitor/charge-events"',
+            '"deepseek-account"',
+            "recordCharge(record.cost, record.timestamp, kind,",
+            "cacheHit: {", "cacheMiss: {", "output: {",
+        )
+        with open(os.path.join(runtime, "host", "billing.mjs"), "w", encoding="utf-8") as fh:
+            fh.write("\n".join(anchors))
+
+    def test_patch_release_of_modern_pulse_is_accepted(self):
+        """4.2.6 (not just 4.2.3) must pass the modern preflight without touching billing."""
+        self.write_modern_runtime("4.2.6")
+        result, commands = self.run_installer([0, 0], pulse_version="4.2.6")
+        self.assertEqual(result, 0)
+        self.assertEqual(len(commands), 2)
+        self.assertTrue(all("patch_whale_widget.py" in command[1] for command in commands))
+
+    def test_manifest_version_must_match_installed_version(self):
+        """A manifest declaring another version is treated as an unknown payload."""
+        self.write_modern_runtime("4.2.3")
+        result, commands = self.run_installer([0, 0], pulse_version="4.2.6")
+        self.assertNotEqual(result, 0)
+        self.assertEqual(commands, [])
+
+    def test_hide_billing_float_adds_the_modern_appearance_patch(self):
+        self.write_modern_runtime("4.2.6")
+        result, commands = self.run_installer([0, 0, 0, 0], "--hide-billing-float", pulse_version="4.2.6")
+        self.assertEqual(result, 0)
+        self.assertEqual(len(commands), 4)
+        self.assertEqual(sum("patch_damage_pulse_modern.py" in command[1] for command in commands), 2)
+
+    def test_unknown_major_version_stops_before_any_patch(self):
+        result, commands = self.run_installer([], pulse_version="4.3.0")
+        self.assertNotEqual(result, 0)
+        self.assertEqual(commands, [])
+
+
 if __name__ == "__main__":
     unittest.main()

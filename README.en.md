@@ -30,10 +30,32 @@ The main image is an edited user-supplied screenshot of the widget with fictiona
 
 | DSH desktop | Widget plugin | Billing plugin | Installer behavior |
 | --- | --- | --- | --- |
+| `0.2.1-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.2.6` | Patches the widget; preflights the billing plugin (4.2.x has native account billing). DSH upgrades can trip the version gate — grant a version exemption first, see below. |
 | `0.2.0-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.2.3` | Patches the widget; preflights the billing plugin and uses its native account billing and charge events. |
 | `0.1.7-rc.2` | `dsh-whale-widget` `0.3.12` | `dsh-damage-pulse` `4.0.11` | Patches the widget and the legacy billing plugin. |
 
-On Windows, installation, setting persistence, and one real positively priced billing record were verified. **The brief live charge text and hit movement were not captured**. The GIFs show the intended appearance only. See the [validation record](docs/VALIDATION.md). Unsupported plugin versions are rejected by preflight.
+On Windows, installation, setting persistence, and real positively priced billing records were verified. **The brief live charge text was not captured frame by frame**. The GIFs show the intended appearance only. See the [validation record](docs/VALIDATION.md). Unsupported plugin versions are rejected by preflight.
+
+## Version gate and exemptions (read this if session costs or charge text disappeared)
+
+A DSH upgrade can block the billing plugin entirely. When the plugin's declared `dsh-*` peer range stops one patch release below the runtime, DSH marks it `incompatible-version`, lists it with `"rows": []`, and **never loads it** — so sidebar session costs, floating charge text, and ledger writes all stop silently.
+
+Observed in October 2026: DSH auto-updated to `0.2.1-rc.2` while `dsh-damage-pulse` `4.2.3`–`4.2.6` only declared support up to `0.2.1-rc.1`, so the ledger stopped on the upgrade day.
+
+How to confirm: check the `mtime` of `~/.dsh/data/dsh-token-monitor/usage.jsonl`, or ask an agent to run `plugin_manager → list_bundles` and look for `"error":{"code":"incompatible-version", …}` with an empty `rows` array, or inspect `~/.dsh/profiles/<profile>/compatibility.json`.
+
+Fix — grant an exemption for one exact version pair (no code changes, revocable):
+
+```text
+plugin_manager → set_version_exemption
+  target         = dsh-damage-pulse@4.2.6     # name@exact version, never a range
+  runtimeVersion = 0.2.1-rc.2                 # from list_version_exemptions
+  acceptRisk     = true                       # only after reading the risk note
+```
+
+Risk: the mismatch is patch-level and usually fine, but not guaranteed — the plugin may fail to start, render oddly in the sidebar, or in the worst case destabilise the frontend. Back up `~/.dsh/data/dsh-token-monitor/` first. Revoking the exemption returns the plugin to the quiet "not loaded" state.
+
+> Exemptions must be granted with the user's explicit consent; the installer never changes this setting.
 
 ## Quick start
 
@@ -89,33 +111,35 @@ Settings are saved to both browser `localStorage` and `~/.dsh/.dshw-balbox.json`
 
 ## Changes and rollback
 
-The package patches the whale widget's host and front-end files. The legacy `4.0.11` path also patches the billing plugin's host and client files to support DSH account billing. Billing plugin `4.2.3` already provides that support and is not modified. The widget patch displays charge events and persists display settings. DSH itself is not modified.
+The package patches the whale widget's host and front-end files. The legacy `4.0.11` path also patches the billing plugin's host and client files to support DSH account billing. Billing plugin `4.2.x` already provides that support and its billing payload is not modified; pass `--hide-billing-float` to additionally hide that plugin's own floating card (two characters / two balances otherwise), which touches only one style line in its `lib/client.js` via `payload/patch_damage_pulse_modern.py`. The widget patch displays charge events and persists display settings. DSH itself is not modified.
 
-To roll back, copy the saved original widget files from `payload/whale-widget-backup-0.3.12/` into the matching plugin paths, or reinstall the widget plugin through DSH. On the legacy `4.0.11` path, also restore `payload/damage-pulse-backup-4.0.11/` or reinstall that plugin. A widget upgrade overwrites its patch. The installer rejects unsupported plugin versions rather than applying old backups to new code.
+To roll back, copy the saved original widget files from `payload/whale-widget-backup-0.3.12/` into the matching plugin paths, or reinstall the widget plugin through DSH. On the legacy `4.0.11` path, also restore `payload/damage-pulse-backup-4.0.11/` or reinstall that plugin. For the 4.2.x appearance patch run `python payload/patch_damage_pulse_modern.py --restore`. A widget upgrade overwrites its patch. The installer rejects unsupported plugin versions rather than applying old backups to new code. A **DSH** upgrade can also trip the version gate described above.
 
 ## Known limits
 
 - Charge text needs `dsh-damage-pulse` to be running and producing events.
 - The patch supports only the plugin versions in the compatibility table. A plugin upgrade can replace the patched widget files.
+- Every DSH major upgrade should be followed by a check that the billing plugin is still loaded (`rows` not empty); the version gate fails silently — the UI just loses its session cost figures.
 - Runtime checks were performed on Windows. A transient live charge animation remains to be captured; demo GIFs are not runtime evidence.
 
 ## Repository contents
 
 ```text
-install.py                    Installer and preflight
-payload/patch_whale_widget.py Widget host and front-end patch
-payload/patch_damage_pulse.py Billing host and client patch
-payload/balbox_patch.js       Injected balance panel and menu code
-tests/test_install.py         Installer behavior tests
-tools/render_demo.py          Original geometric PNG renderer
-tools/render_widget_gifs.py   Widget GIF renderer (needs a local licensed role PNG)
-tools/assets/                 CC BY-NC-SA 4.0 partial blink overlay
-docs/media/                   Edited widget screenshot and illustrative media
-docs/VALIDATION.md            Current runtime validation record
-README.md                     Chinese guide
-NOTES.md                      Chinese implementation notes
-LICENSE                       MIT license for this project's original code
-THIRD_PARTY_NOTICES.md        Dependency credits and licenses
+install.py                            Installer and preflight (--check, --hide-billing-float)
+payload/patch_whale_widget.py         Widget host and front-end patch
+payload/patch_damage_pulse.py         Legacy 4.0.11 billing host and client patch
+payload/patch_damage_pulse_modern.py  4.2.x appearance patch (hide its float card, --restore)
+payload/balbox_patch.js               Injected balance panel and menu code
+tests/test_install.py                 Installer behavior tests
+tools/render_demo.py                  Original geometric PNG renderer
+tools/render_widget_gifs.py           Widget GIF renderer (needs a local licensed role PNG)
+tools/assets/                         CC BY-NC-SA 4.0 partial blink overlay
+docs/media/                           Edited widget screenshot and illustrative media
+docs/VALIDATION.md                    Current runtime validation record
+README.md                             Chinese guide
+NOTES.md                              Chinese implementation notes
+LICENSE                               MIT license for this project's original code
+THIRD_PARTY_NOTICES.md                Dependency credits and licenses
 ```
 
 The original installer and patch code is released under the [MIT License](LICENSE). The edited screenshot, GIFs, and blink overlay contain adapted `maid-atelier` art under **CC BY-NC-SA 4.0**; the complete role image is not bundled. The hit reaction takes interaction inspiration from `dsh-damage-pulse`, but its code is original, and that plugin's extra blue-haired character is not included. The maintainer-supplied support image has its own usage boundary. See [third-party notices](THIRD_PARTY_NOTICES.md) for attribution and details.

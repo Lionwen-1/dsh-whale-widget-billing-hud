@@ -158,6 +158,48 @@ GET /api/token-monitor/charge-events?since=<seq>
 | 同上 | `bottom:59.45%` | 飘字整块锚点（与 ☰ 按钮同高） |
 | `payload/patch_whale_widget.py` | `IMG_TO` | 角色上抬像素 |
 | 同上 | `BALBOX_HOST` | 落盘路由的字段白名单 |
-| `payload/patch_damage_pulse.py` | `START_TO` / `POLL_TO` | 余额快速重试与轮询间隔 |
+| 同上 | `POP_TO` | 泡泡的 `transform`（位移 + 缩放） |
+| `payload/patch_damage_pulse.py` | `START_TO` / `POLL_TO` | 旧版：余额快速重试与轮询间隔 |
+| `payload/patch_damage_pulse_modern.py` | `ANCHORS` | 4.2.x：`CARD` 锚点（单行/多行两种写法） |
 
 改完重跑 `python install.py`，再重启 DSH。
+
+---
+
+## 八、DSH 升级把插件拦在门外（2026-10 复盘）
+
+### 现象
+
+界面没报错，只是**侧栏会话行的金额没了**、挂件不再飘红字、账本停止增长。用户视角像"功能坏了"，其实是插件**根本没加载**。
+
+### 根因
+
+`dsh-damage-pulse` 的 `peerDependencies` 声明了它兼容的 `dsh-*` 版本区间。DSH 自动更新到
+`0.2.1-rc.2` 后，`4.2.3`～`4.2.6` 的区间只写到 `0.2.1-rc.1`（差一个补丁号）⇒ 宿主判定
+`incompatible-version` ⇒ 加载器里该插件 `rows: []`，前端因此拿不到任何计费数据。
+
+### 判定（三条独立证据）
+
+1. `~/.dsh/data/dsh-token-monitor/usage.jsonl` 的 mtime 停在升级当天；
+2. `plugin_manager → list_bundles` 里该条目带
+   `"error":{"code":"incompatible-version","runtimeVersion":"0.2.1-rc.2", ...}` 且 `"rows":[]`；
+3. `~/.dsh/profiles/<profile>/compatibility.json` 只有旧版本（如 `…@4.0.11`）的豁免记录。
+
+### 处理
+
+对**精确版本对**授豁免（`plugin_manager → set_version_exemption`，`target` 必须是
+`包名@版本`，不能写范围），然后重启 DSH。
+
+- 授权前必须向用户说明风险：插件可能启动报错、侧栏渲染异常，极端情况影响前端稳定性；
+- 先备份 `~/.dsh/data/dsh-token-monitor/`（账本是唯一不可重建的资产）；
+- 愿意升级插件的话，先 `remove_bundle` 再 `install_bundle` 到目标版本，**再**授豁免
+  （豁免按 `包名@版本` 记录，升级后要重新授）；
+- 撤销豁免即回到"未加载"的安静状态，界面不再有金额，但不会报错。
+
+### 经验
+
+- 上游有时会自己修好我们当年的补丁（4.2 起 `OFFICIAL_PROVIDER_IDS` 就包含
+  `deepseek-account`、余额也走 DSH 原生服务）——所以补丁脚本要**按版本分流**，别把老补丁硬套到新版本；
+- 这类门禁是**静默**的：没有异常弹窗，只有数据消失。DSH 每次大版本升级后都值得复查一次
+  `rows` 是否为空；
+- 判定"是谁的问题"时，先看**数据文件的时间戳**，比看界面快。
